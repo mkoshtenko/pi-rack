@@ -13,7 +13,7 @@
       upgrade: dist
   
   - name: Ensure Chrony (for time synchronization) is installed
-    yum:
+    apt:
       name: chrony
       state: present
 
