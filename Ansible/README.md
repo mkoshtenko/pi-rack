@@ -29,3 +29,11 @@ ansible all -m ping
 ansible all -a 'uptime'
 ansible pi -a "free -h"
 ```
+## Run playbooks
+```
+# use local inventory
+ansible-playbook --inventory-file all_rpios_devices.ini rpi-os-lite-basic-playbook.yml
+# or global inventory
+ansible-playbook --inventory-file ~/ansible.hosts rpi-os-lite-basic-playbook.yml
+```
+
