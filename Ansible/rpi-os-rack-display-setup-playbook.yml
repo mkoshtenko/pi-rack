@@ -49,6 +49,7 @@
     - name: Clone SKU_RM0004 library
       git:
         repo: https://github.com/UCTRONICS/SKU_RM0004.git 
+        depth: 1
         dest: "{{ lib_source }}"
 
     - name: Compile SKU_RM0004
