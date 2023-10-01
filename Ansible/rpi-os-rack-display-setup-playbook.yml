@@ -8,22 +8,45 @@
     - name: Update boot configuration in config.txt
       lineinfile:
         path: /boot/config.txt
-        regexp: '^{{ item.key }}=.*$'
-        line: '{{ item.key }}={{ item.value }}'
+        regexp: "^{{ item.key }}=.*$"
+        line: "{{ item.key }}={{ item.value }}"
         state: present
       with_items:
         - "{{ boot_config }}"
       register: config_update_status
+    
     - set_fact: needs_reboot=true
       when:
         item is changed
       with_items: 
         - "{{ config_update_status.results }}"
+    
     - name: Reboot to apply config changes
       reboot:
       when:
         - needs_reboot is defined
         - needs_reboot is true
+    
+    - name: Clone SKU_RM0004 library
+      git:
+        repo: https://github.com/UCTRONICS/SKU_RM0004.git 
+        dest: "{{ lib_source }}"
+
+    - name: Compile SKU_RM0004
+      make:
+        chdir: "{{ lib_source }}"
+
+    - name: Add SKU_RM0004 ./display to the run-control script
+      lineinfile:
+        path: /etc/rc.local
+        line: "cd {{ lib_source }} && ./display"
+        insertbefore: "exit 0"
+      register: runcontrol_update_status
+
+    - name: Reboot to start SKU_RM0004 ./display
+      reboot:
+      when:
+        runcontrol_update_status is changed
 
   vars:
     lib_source: ~/SKU_RM0004
