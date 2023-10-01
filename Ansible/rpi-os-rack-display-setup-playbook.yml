@@ -55,17 +55,17 @@
       make:
         chdir: "{{ lib_source }}"
 
-    - name: Copy display binary to /usr/bin
+    - name: Copy display binary to /usr/local/bin
       copy:
         src: "{{ lib_source }}/display"
-        dest: "/usr/bin/{{ lib_name }}"
+        dest: "/usr/local/bin/{{ lib_name }}"
         mode: '755'
         remote_src: true
 
     - name: Add {{ lib_name }} to the run-control script
       lineinfile:
         path: /etc/rc.local
-        line: "{{ lib_name }}"
+        line: "{{ lib_name }} &"
         insertbefore: "exit 0"
       register: runcontrol_update_status
 
