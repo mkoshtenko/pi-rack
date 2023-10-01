@@ -1,0 +1,35 @@
+---
+- hosts: all 
+  become: true
+
+  tasks:
+    - name: Add necessary lines to config.txt
+      lineinfile:
+        path: /boot/config.txt
+        regexp: '^{{ item.key }}=.*$'
+        line: '{{ item.key }}={{ item.value }}'
+        state: present
+      with_items:
+        - "{{ boot_config }}"
+    - name: Reboot
+      reboot:
+
+
+  vars:
+    boot_config:
+      # Turn on i2c and set the speed
+      - key: "dtparam=i2c_arm"
+        value: "on"
+      - key: "i2c_arm_baudrate"
+        value: "400000"
+      # Turn on the button to control the shutdown function 
+      - key: "dtoverlay" 
+        value: "gpio-shutdown"
+      - key: "gpio_pin"
+        value: "4"
+      - key: "active_low"
+        value: "1"
+      - key: "gpio_pull"
+        value: "up"
+
+
