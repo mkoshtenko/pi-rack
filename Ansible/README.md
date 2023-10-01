@@ -48,3 +48,4 @@ ansible-playbook --inventory-file ~/ansible.hosts rpi-os-rack-display-setup-play
 
 ## TODO:
 - Use systemd instead of rc.local [example](https://github.com/UCTRONICS/SKU_RM0004/issues/3)
+- Add ansible roles
