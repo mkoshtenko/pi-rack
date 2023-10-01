@@ -20,7 +20,14 @@
         item is changed
       with_items: 
         - "{{ config_update_status.results }}"
-    
+   
+    - name: Add i2c-dev to auto-start modules 
+      lineinfile:
+        dest: /etc/modules
+        create: yes
+        line: 'i2c-dev'
+        state: present
+
     - name: Reboot to apply config changes
       reboot:
       when:
@@ -36,10 +43,17 @@
       make:
         chdir: "{{ lib_source }}"
 
-    - name: Add SKU_RM0004 ./display to the run-control script
+    - name: Copy display binary to /usr/bin
+      copy:
+        src: "{{ lib_source }}/display"
+        dest: "/usr/bin/{{ lib_name }}"
+        mode: '755'
+        remote_src: true
+
+    - name: Add "{{ lib_name }}" to the run-control script
       lineinfile:
         path: /etc/rc.local
-        line: "cd {{ lib_source }} && ./display"
+        line: "{{ lib_name }}"
         insertbefore: "exit 0"
       register: runcontrol_update_status
 
@@ -50,20 +64,21 @@
 
   vars:
     lib_source: ~/SKU_RM0004
+    lib_name: start_display_manager
     boot_config:
       # Turn on i2c and set the speed
       - key: "dtparam=i2c_arm"
         value: "on"
-      - key: "i2c_arm_baudrate"
+      - key: "dtparam=2c_arm_baudrate"
         value: "400000"
       # Turn on the button to control the shutdown function 
       - key: "dtoverlay" 
         value: "gpio-shutdown"
-      - key: "gpio_pin"
+      - key: "dtoverlay=gpio_pin"
         value: "4"
-      - key: "active_low"
+      - key: "dtoverlay=active_low"
         value: "1"
-      - key: "gpio_pull"
+      - key: "dtoverlay=gpio_pull"
         value: "up"
 
 
