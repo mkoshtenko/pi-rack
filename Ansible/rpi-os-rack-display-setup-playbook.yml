@@ -1,9 +1,11 @@
 ---
 - hosts: all 
   become: true
-
+  
+  # Full setup instruction:
+  # https://github.com/UCTRONICS/SKU_RM0004/blob/main/README.md
   tasks:
-    - name: Add necessary lines to config.txt
+    - name: Update boot configuration in config.txt
       lineinfile:
         path: /boot/config.txt
         regexp: '^{{ item.key }}=.*$'
@@ -11,11 +13,20 @@
         state: present
       with_items:
         - "{{ boot_config }}"
-    - name: Reboot
+      register: config_update_status
+    - set_fact: needs_reboot=true
+      when:
+        item is changed
+      with_items: 
+        - "{{ config_update_status.results }}"
+    - name: Reboot to apply config changes
       reboot:
-
+      when:
+        - needs_reboot is defined
+        - needs_reboot is true
 
   vars:
+    lib_source: ~/SKU_RM0004
     boot_config:
       # Turn on i2c and set the speed
       - key: "dtparam=i2c_arm"
