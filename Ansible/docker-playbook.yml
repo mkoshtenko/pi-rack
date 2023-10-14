@@ -17,3 +17,17 @@
     args:
       creates: /home/{{ ansible_env.SUDO_USER }}/get-docker.sh
 
+  - name: Install docker
+    shell: sh /home/{{ ansible_env.SUDO_USER }}/get-docker.sh
+    args:
+      creates: /usr/bin/docker
+
+  - name: Add "{{ ansible_env.SUDO_USER }}" user into docker group
+    user:
+      name: "{{ ansible_env.SUDO_USER }}"
+      groups: docker
+      append: yes
+
+  - name: Install docker-compose
+    pip:
+      name: docker-compose
