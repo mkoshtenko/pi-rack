@@ -11,6 +11,11 @@ Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/U
 Note: Requires a custom adapter for the rack mount
 
 ## DNS
+Hardware:
+- RPi 4 Model B
+  - RAM 4GB
+  - Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.8GHz
+
 OS Installation:
 - Latest Raspberry Pi OS Lite (64-bit). tested with:
   -  Debian 11 (bullseye)
