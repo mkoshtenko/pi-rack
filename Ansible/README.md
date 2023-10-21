@@ -23,9 +23,9 @@ inventory file example at: ~/ansible.hosts
 pi.mydomain.com ansible_user=admin
 ```
 
-Create local inventory and modify content
+Create inventory copy and modify content
 ```
-cp all_rpios_devices.ini devices.ini
+cp devices_template.ini devices.ini
 ```
 
 
