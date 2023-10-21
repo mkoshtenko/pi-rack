@@ -1,2 +1,7 @@
+[owrt]
+coco.local ansible_host=192.168.1.1 ansible_user=admin
+
 [rpios]
 kleo.local ansible_host=192.168.1.2 ansible_user=admin
+lady.local ansible_host=192.168.1.5 ansible_user=admin
+millie.local ansible_host=192.168.1.6 ansible_user=admin
