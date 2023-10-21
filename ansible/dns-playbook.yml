@@ -3,30 +3,17 @@
 #  become: yes
 
   tasks:
-  - name: Create ~/docker directory
+  - name: Create ~/docker/... dirs
     file:
-      path: "{{ docker_dir }}"
+      path: "{{ item.name }}"
       state: directory
       mode: '0755'
-  
-  - name: Create ~/docker/shared directory
-    file:
-      path: "{{ shared_dir }}"
-      state: directory
-      mode: '0755'
+    loop:
+      - { name: "{{ docker_dir }}" }
+      - { name: "{{ shared_dir }}" }
+      - { name: "{{ app_dir }}" }
+      - { name: "{{ logs_dir }}" }
 
-  - name: Create ~/docker/app directory 
-    file:
-      path: "{{ app_dir }}"
-      state: directory
-      mode: '0755'
-  
-  - name: Create ~/docker/logs directory 
-    file:
-      path: "{{ logs_dir }}"
-      state: directory
-      mode: '0755'
-  
   - name: Copy .htpasswd to the host
     copy:
       src: "../dns/.htpasswd"
