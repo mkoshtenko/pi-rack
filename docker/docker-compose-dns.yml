@@ -6,6 +6,12 @@ networks:
       name: proxy
   default:
     driver: bridge
+  proxy:
+    name: proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.90.0/24
 
 services:
   traefik:
