@@ -53,3 +53,6 @@ ansible-playbook --inventory-file devices.ini docker-playbook.yml
 ## TODO:
 - Use systemd instead of rc.local [example](https://github.com/UCTRONICS/SKU_RM0004/issues/3)
 - Add ansible roles
+- Make sure WiFi is disabled
+- No swap and file-system caching
+- Redirect logs
