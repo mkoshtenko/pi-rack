@@ -1,13 +1,10 @@
 version: "3.9"
 
 networks:
-  proxy:  # Traefik proxy network
-    external:
-      name: proxy
   default:
     driver: bridge
-  proxy:
-    name: proxy
+  traefik_proxy:
+    name: traefik_proxy
     driver: bridge
     ipam:
       config:
@@ -18,26 +15,31 @@ services:
     container_name: traefik
     image: traefik:chevrotin  # the chevrotin tag refers to v2.2.x
     restart: unless-stopped
+    networks: traefik_proxy
+    security_opt:
+      - no-new-privileges:true
     command: # CLI arguments
       - --global.checkNewVersion=true
       - --global.sendAnonymousUsage=true
       - --entryPoints.http.address=:80
       - --entryPoints.https.address=:443
       - --entryPoints.traefik.address=:8080
+      - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
       - --api=true
 #      - --api.insecure=true
 #      - --serversTransport.insecureSkipVerify=true
+      - --api.dashboard=true
       - --log=true
       - --log.level=DEBUG # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
       - --accessLog=true
-      - --accessLog.filePath=/traefik.log
+      - --accessLog.filePath=/logs/access.log
       - --accessLog.bufferingSize=100 # Configuring a buffer of 100 lines
-      - --accessLog.filters.statusCodes=400-499
+      - --accessLog.filters.statusCodes=204-299,400-499,500-599
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock
-      - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME_CLOUD_SERVER`)
+      #- --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME_CLOUD_SERVER`)
       - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=proxy
+      - --providers.docker.network=traefik_proxy
       - --providers.docker.swarmMode=false
       - --providers.file.directory=/rules # Load dynamic configuration from one or more .toml or .yml files in a directory.
 #      - --providers.file.filename=/path/to/file # Load dynamic configuration from a file.
@@ -56,10 +58,15 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DOCKERDIR/traefik/rules:/rules
-      - $DOCKERDIR/traefik/traefik.log:/traefik.log
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # TODO: Use Docker Socket Proxy instead for improved security
+      - $DOCKERDIR/app/traefik/rules:/rules
       - $DOCKERDIR/shared:/shared
+      - $DOCKERDIR/logs:/logs
+    environment:
+      - TZ=$TZ
+      - HTPASSWD_FILE=/shared/.htpasswd
     labels:
       - "traefik.enable=true"
+      ## Middlewares
+      - "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
 
