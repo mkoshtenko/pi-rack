@@ -15,6 +15,18 @@
       state: directory
       mode: '0755'
 
+  - name: Create ~/docker/app directory 
+    file:
+      path: "{{ app_dir }}"
+      state: directory
+      mode: '0755'
+  
+  - name: Create ~/docker/logs directory 
+    file:
+      path: "{{ logs_dir }}"
+      state: directory
+      mode: '0755'
+  
   - name: Copy .htpasswd to the host
     copy:
       src: "../dns/.htpasswd"
@@ -28,7 +40,41 @@
       dest: "{{ docker_dir }}/.env"
       mode: '600'
 
+# Traefik folders and files
+
+  - name: Create ~/docker/app/traefik directory 
+    file:
+      path: "{{ traefik_dir }}"
+      state: directory
+      mode: '0755'
+
+  - name: Create ~/docker/app/traefik/rules directory 
+    file:
+      path: "{{ traefik_dir }}/rules"
+      state: directory
+      mode: '0755'
+  
+  - name: Create ~/docker/logs/traefik directory 
+    file:
+      path: "{{ logs_dir }}/traefik"
+      state: directory
+      mode: '0755'
+
+  - name: Create empty traefik log files
+    file:
+      path: "{{ logs_dir }}/traefik/{{ item.name }}"
+      state: touch
+      mode: '755'
+      modification_time: preserve
+      access_time: preserve
+    loop:
+      - { name: "traefik.log" }
+      - { name: "access.log" }
+  
   vars:
     docker_dir: "/home/{{ ansible_user_id }}/docker"
     shared_dir: "{{ docker_dir }}/shared"
+    app_dir: "{{ docker_dir }}/app"
+    logs_dir: "{{ docker_dir }}/logs"
+    traefik_dir: "{{ app_dir }}/traefik"
 
