@@ -1,10 +1,27 @@
 ---
 - hosts: kleo.local
-  become: yes
+#  become: yes
 
   tasks:
-  - name: Create Docker folder
+  - name: Create ~/docker directory
     file:
-      path: /home/{{ ansible_env.SUDO_USER }}/docker
+      path: "{{ docker_dir }}"
       state: directory
+      mode: '0755'
+  
+  - name: Create ~/docker/shared directory
+    file:
+      path: "{{ shared_dir }}"
+      state: directory
+      mode: '0755'
+
+  - name: Copy .htpasswd to the host
+    copy:
+      src: "../dns/.htpasswd"
+      dest: "{{ docker_dir }}/shared/.htpasswd"
+      mode: '755'
+
+  vars:
+    docker_dir: "/home/{{ ansible_user_id }}/docker"
+    shared_dir: "{{ docker_dir }}/shared"
 
