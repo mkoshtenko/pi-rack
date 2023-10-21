@@ -15,7 +15,8 @@ services:
     container_name: traefik
     image: traefik:chevrotin  # the chevrotin tag refers to v2.2.x
     restart: unless-stopped
-    networks: traefik_proxy
+    networks: 
+      - traefik_proxy
     security_opt:
       - no-new-privileges:true
     command: # CLI arguments
