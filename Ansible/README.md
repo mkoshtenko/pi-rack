@@ -25,7 +25,7 @@ pi.mydomain.com ansible_user=admin
 
 Create inventory copy and modify content
 ```
-cp devices_template.ini devices.ini
+cp devices.ini.example devices.ini
 ```
 
 
