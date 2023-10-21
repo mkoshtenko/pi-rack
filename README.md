@@ -11,6 +11,14 @@ Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/U
 Note: Requires a custom adapter for the rack mount
 
 ## DNS
+OS Installation:
+- Latest Raspberry Pi OS Lite (64-bit). tested with:
+  -  Debian 11 (bullseye)
+  -  Debian 12 (bookworm)
+- Set hostname
+- Set IPv4 address
+- Enable ssh access
+
 Overview:
 - [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
   - Handle client DNS requests
