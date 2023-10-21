@@ -18,7 +18,7 @@
   - name: Copy .htpasswd to the host
     copy:
       src: "../dns/.htpasswd"
-      dest: "{{ docker_dir }}/shared/.htpasswd"
+      dest: "{{ shared_dir }}/.htpasswd"
       mode: '755'
 
   vars:
