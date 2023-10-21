@@ -11,14 +11,17 @@ Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/U
 Note: Requires a custom adapter for the rack mount
 
 ## DNS
-Docker
-- Pi-Hole - add-blocker + cache
+Overview:
+- [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
   - Handle client DNS requests
   - Delegate requests to the local Unbound installation
-- Unbound - a secure recursive DNS server
-  - Listen only for queries from the local Pi-hole installation (on port 5335)
+- [Unbound](https://unbound.docs.nlnetlabs.nl/en/latest/) - a secure recursive DNS server
+  - Listen only for queries from the local Pi-Hole installation (on port 5335)
   - Listen for both UDP and TCP requests
   - Verify DNSSEC signatures, discarding BOGUS domains
+- [Traefik](https://doc.traefik.io/traefik/getting-started/quick-start/) - reverse proxy
+  - Redirect port 80 to the local Pi-Hole
+  - TLS termination
  
 Links:
 - [pi-hole in a docker container](https://github.com/pi-hole/docker-pi-hole)
