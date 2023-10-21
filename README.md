@@ -19,6 +19,14 @@ OS Installation:
 - Set IPv4 address
 - Enable ssh access
 
+```
+# /etc/dhcpcd.conf example
+interface eth0
+static ip_address=192.168.1.2/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.2
+```
+
 Overview:
 - [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
   - Handle client DNS requests
