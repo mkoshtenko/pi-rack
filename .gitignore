@@ -3,4 +3,5 @@
 
 # secrets
 .htpasswd
+.env
 devices.ini
