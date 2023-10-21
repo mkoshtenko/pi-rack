@@ -1,5 +1,6 @@
 # OS X
 .DS_Store
 
-# copy of secrets.example/
-secrets/
+# secrets
+.htpasswd
+devices.ini
