@@ -21,6 +21,13 @@
       dest: "{{ shared_dir }}/.htpasswd"
       mode: '755'
 
+  - name: Copy .env to the host
+    become: yes
+    copy:
+      src: "../dns/.env"
+      dest: "{{ docker_dir }}/.env"
+      mode: '600'
+
   vars:
     docker_dir: "/home/{{ ansible_user_id }}/docker"
     shared_dir: "{{ docker_dir }}/shared"
