@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+  - name: Run the equivalent of "apt-get update"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+  
+  - name: Update all packages to the latest version
+    apt:
+      upgrade: dist
+  
+  - name: Ensure Chrony (for time synchronization) is installed
+    apt:
+      name: chrony
+      state: present
+
+  - name: Ensure chrony is running
+    service:
+      name: chronyd
+      state: started
+      enabled: yes
+
+  - name: Install git when necessary
+    apt:
+      name: git
+      state: present
+
