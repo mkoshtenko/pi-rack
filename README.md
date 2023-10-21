@@ -46,7 +46,8 @@ Overview:
  
 Links:
 - [pi-hole in a docker container](https://github.com/pi-hole/docker-pi-hole)
-- [pi-hole docs for unbound](https://docs.pi-hole.net/guides/dns/unbound/)
+- [unbound pi-hole docs](https://docs.pi-hole.net/guides/dns/unbound/)
+- [traefik docker guide](https://www.smarthomebeginner.com/traefik-docker-compose-guide-2022/)
 
 ## VPN
 Pi-VPN
