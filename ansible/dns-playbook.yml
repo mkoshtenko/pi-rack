@@ -27,6 +27,12 @@
       dest: "{{ docker_dir }}/.env"
       mode: '600'
 
+  - name: Copy docker-compose.yml to the host
+    copy:
+      src: "../docker/docker-compose-dns.yml"
+      dest: "{{ docker_dir }}/docker-compose.yml"
+      mode: '755'
+
 # Traefik folders and files
 
   - name: Create ~/docker/app/traefik directory 
