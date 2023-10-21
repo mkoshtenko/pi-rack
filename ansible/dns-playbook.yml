@@ -1,0 +1,10 @@
+---
+- hosts: kleo.local
+  become: yes
+
+  tasks:
+  - name: Create Docker folder
+    file:
+      path: /home/{{ ansible_env.SUDO_USER }}/docker
+      state: directory
+
