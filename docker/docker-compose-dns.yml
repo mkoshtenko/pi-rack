@@ -75,9 +75,9 @@ services:
     environment:
       - TZ=$TZ
       - HTPASSWD_FILE=/shared/.htpasswd
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file"
+    #labels:
+      #- "traefik.enable=true"
+      #- "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file"
 
   whoami:
     image: "traefik/whoami"
@@ -93,7 +93,7 @@ services:
       - "traefik.http.routers.whoami-rtr.entrypoints=http,https"
       - "traefik.http.routers.whoami-rtr.rule=Host(`ns.$DOMAINNAME`)"
       ### Middlewares
-      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file"
+      - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file"
       ### Services
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
