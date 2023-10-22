@@ -92,7 +92,6 @@ services:
       ### Routers
       - "traefik.http.routers.whoami-rtr.entrypoints=http,https"
       - "traefik.http.routers.whoami-rtr.rule=Host(`ns.$DOMAINNAME`)"
-      - "traefik.http.routers.https-whoami-rtr.rule=Host(`ns.$DOMAINNAME`)"
       ### Middlewares
       - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file"
       ### Services
