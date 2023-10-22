@@ -27,8 +27,8 @@ services:
       - --entryPoints.traefik.address=:8080
       - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
       - --api=true
-#      - --api.insecure=true
-#      - --serversTransport.insecureSkipVerify=true
+      - --api.insecure=true
+      #- --serversTransport.insecureSkipVerify=true
       - --api.dashboard=true
       - --log=true
       - --log.level=DEBUG # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
@@ -43,7 +43,7 @@ services:
       - --providers.docker.network=traefik_proxy
       - --providers.docker.swarmMode=false
       - --providers.file.directory=/rules # Load dynamic configuration from one or more .toml or .yml files in a directory.
-#      - --providers.file.filename=/path/to/file # Load dynamic configuration from a file.
+      #- --providers.file.filename=/path/to/file # Load dynamic configuration from a file.
       - --providers.file.watch=true # Only works on top level files in the rules folder
     ports:
       - target: 80
@@ -70,4 +70,19 @@ services:
       - "traefik.enable=true"
       ## Middlewares
       - "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami"
+    networks:
+      - traefik_proxy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      #- "traefik.http.routers.whoami-rtr.entrypoints=http"
+      - "traefik.http.routers.whoami.rule=Host(`ns.$DOMAINNAME`)"
+      #- "traefik.http.routers.whoami-rtr.service=whoami-svc"
+      #- "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
 
