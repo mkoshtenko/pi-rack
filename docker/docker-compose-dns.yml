@@ -89,8 +89,12 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      #- "traefik.http.routers.whoami-rtr.entrypoints=http"
+      ### Routers
+      - "traefik.http.routers.whoami-rtr.entrypoints=https"
       - "traefik.http.routers.whoami.rule=Host(`ns.$DOMAINNAME`)"
-      #- "traefik.http.routers.whoami-rtr.service=whoami-svc"
-      #- "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
+      ### Middlewares
+      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file"
+      ### Services
+      - "traefik.http.routers.whoami-rtr.service=whoami-svc"
+      - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
 
