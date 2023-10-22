@@ -13,7 +13,7 @@ networks:
 services:
   traefik:
     container_name: traefik
-    image: traefik:2.7
+    image: traefik:2.10
     ## Always restart the container if it stops. If it's manually stopped, it's restarted only when Docker daemon restarts or the container itself is manually restarted.
     restart: always
     networks: 
@@ -71,7 +71,7 @@ services:
     labels:
       - "traefik.enable=true"
       ## Middlewares
-      - "traefik.http.routers.traefik-rtr.middlewares=middlewares-basic-auth@file" # For Basic HTTP Authentication
+      - "traefik.http.routers.traefik-rtr.middlewares=middlewares-rate-limit@file,middlewares-basic-auth@file" 
 
   whoami:
     image: "traefik/whoami"

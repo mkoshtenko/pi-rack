@@ -5,3 +5,10 @@ http:
         usersFile: "/shared/.htpasswd"
         realm: "Traefik Basic Auth"
 
+    middlewares-rate-limit:
+      # Here, an average of 50 requests per second is allowed.
+      # In addition, a burst of 50 requests is allowed.
+      rateLimit:
+        average: 50
+        burst: 50
+
