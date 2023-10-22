@@ -23,15 +23,18 @@ services:
     command: # CLI arguments
       - --global.checkNewVersion=true
       - --global.sendAnonymousUsage=true
-      - --entryPoints.http.address=:80
-      - --entryPoints.https.address=:443
-      - --entryPoints.traefik.address=:8080
-      - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
+      ### API
       - --api=true
       ## Allow insecure connections during debugging
       - --api.insecure=true
       #- --serversTransport.insecureSkipVerify=true
       - --api.dashboard=true
+      ### Entry Points
+      - --entryPoints.http.address=:80
+      - --entryPoints.https.address=:443
+      - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
+      - --entryPoints.traefik.address=:8080
+      ### Logs
       - --log=true
       - --log.filePath=/logs/traefik.log
       - --log.level=INFO # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
@@ -39,14 +42,18 @@ services:
       - --accessLog.filePath=/logs/access.log
       - --accessLog.bufferingSize=100 # Configuring a buffer of 100 lines
       - --accessLog.filters.statusCodes=204-299,400-499,500-599
+      ### Docker
       - --providers.docker=true
-      - --providers.docker.endpoint=unix:///var/run/docker.sock
-      - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME`)
+      - --providers.docker.endpoint=unix:///var/run/docker.sock # Use Docker Socket Proxy for improved security
       - --providers.docker.exposedByDefault=false
+      - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME`)
       - --providers.docker.network=traefik_proxy
       - --providers.docker.swarmMode=false
+      ### Rules
       - --providers.file.directory=/rules # Load dynamic configuration from one or more .toml or .yml files in a directory.
       - --providers.file.watch=true # Only works on top level files in the rules folder
+      ### HTTPS
+      - --entrypoints.https.http.tls.options=tls-opts@file
     ports:
       - target: 80
         published: 80
