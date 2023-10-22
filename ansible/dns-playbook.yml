@@ -16,24 +16,16 @@
       - { name: "{{ traefik_dir }}" }
       - { name: "{{ traefik_dir }}/rules" }
 
-  - name: Copy .htpasswd to the host
+  - name: Move files to the host
+    become: "{{ item.become }}"
     copy:
-      src: "../dns/.htpasswd"
-      dest: "{{ shared_dir }}/.htpasswd"
-      mode: '755'
-
-  - name: Copy .env to the host
-    become: yes
-    copy:
-      src: "../dns/.env"
-      dest: "{{ docker_dir }}/.env"
-      mode: '600'
-
-  - name: Copy docker-compose.yml to the host
-    copy:
-      src: "../docker/docker-compose-dns.yml"
-      dest: "{{ docker_dir }}/docker-compose.yml"
-      mode: '755'
+      src: "{{ item.from }}"
+      dest: "{{ item.to }}"
+      mode: "{{ item.mode }}"
+    loop:
+      - { from: "../dns/.env", to: "{{ docker_dir }}/.env", mode: "600", become: yes }
+      - { from: "../dns/.htpasswd", to: "{{ shared_dir }}/.htpasswd", mode: "755", become: no }
+      - { from: "../docker/docker-compose-dns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "755", become: no}
 
   - name: Create empty traefik log files
     file:
