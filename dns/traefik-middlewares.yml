@@ -5,10 +5,21 @@ http:
         usersFile: "/shared/.htpasswd"
         realm: "Traefik Basic Auth"
 
+    # This is not necessary for a home-lab environment
     middlewares-rate-limit:
       # Here, an average of 50 requests per second is allowed.
       # In addition, a burst of 50 requests is allowed.
       rateLimit:
         average: 50
         burst: 50
+  
+    # compress the output to reduce bandwidth
+    middlewares-compress:
+      compress: {}
+
+    # HTTP -> HTTPS
+    middlewares-https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
 
