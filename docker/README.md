@@ -1,5 +1,6 @@
 # Docker 
 
 ```
-docker-compose up
+docker-compose up -d
+docker ps
 ```
