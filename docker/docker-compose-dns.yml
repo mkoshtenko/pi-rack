@@ -27,11 +27,13 @@ services:
       - --entryPoints.traefik.address=:8080
       - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
       - --api=true
+      ## Allow insecure connections during debugging
       - --api.insecure=true
       #- --serversTransport.insecureSkipVerify=true
       - --api.dashboard=true
       - --log=true
-      - --log.level=DEBUG # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - --log.filePath=/logs/traefik.log
+      - --log.level=INFO # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
       - --accessLog=true
       - --accessLog.filePath=/logs/access.log
       - --accessLog.bufferingSize=100 # Configuring a buffer of 100 lines

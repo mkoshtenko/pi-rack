@@ -13,6 +13,8 @@
       - { name: "{{ shared_dir }}" }
       - { name: "{{ app_dir }}" }
       - { name: "{{ logs_dir }}" }
+      - { name: "{{ traefik_dir }}" }
+      - { name: "{{ traefik_dir }}/rules" }
 
   - name: Copy .htpasswd to the host
     copy:
@@ -33,20 +35,6 @@
       dest: "{{ docker_dir }}/docker-compose.yml"
       mode: '755'
 
-# Traefik folders and files
-
-  - name: Create ~/docker/app/traefik directory 
-    file:
-      path: "{{ traefik_dir }}"
-      state: directory
-      mode: '0755'
-
-  - name: Create ~/docker/app/traefik/rules directory 
-    file:
-      path: "{{ traefik_dir }}/rules"
-      state: directory
-      mode: '0755'
-  
   - name: Create empty traefik log files
     file:
       path: "{{ logs_dir }}/{{ item.name }}"
