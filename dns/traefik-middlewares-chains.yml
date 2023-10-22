@@ -4,14 +4,12 @@ http:
       chain:
         middlewares:
           - middlewares-rate-limit
-          #- middlewares-https-redirectscheme
-          - middlewares-compress
+          #- middlewares-compress
  
     chain-basic-auth:
       chain:
         middlewares:
           - middlewares-rate-limit
-          #- middlewares-https-redirectscheme
           - middlewares-basic-auth
-          - middlewares-compress
+          #- middlewares-compress
 

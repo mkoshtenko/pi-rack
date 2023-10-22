@@ -25,15 +25,13 @@ services:
       - --global.sendAnonymousUsage=true
       ### API
       - --api=true
-      ## Allow insecure connections during debugging
+      - --api.dashboard=true
       - --api.insecure=true
       #- --serversTransport.insecureSkipVerify=true
-      - --api.dashboard=true
       ### Entry Points
       - --entryPoints.http.address=:80
       - --entryPoints.https.address=:443
       - --entrypoints.https.forwardedHeaders.trustedIPs=$LOCAL_IPS
-      - --entryPoints.traefik.address=:8080
       ### Logs
       - --log=true
       - --log.filePath=/logs/traefik.log
@@ -46,7 +44,6 @@ services:
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock # Use Docker Socket Proxy for improved security
       - --providers.docker.exposedByDefault=false
-      - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME`)
       - --providers.docker.network=traefik_proxy
       - --providers.docker.swarmMode=false
       ### Rules
@@ -63,10 +60,6 @@ services:
         published: 443
         protocol: tcp
         mode: host
-      - target: 8080  # Traefik dashboard
-        published: 8080
-        protocol: tcp
-        mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro  # TODO: Use Docker Socket Proxy instead for improved security
       - $DOCKERDIR/app/traefik/rules:/rules
@@ -75,6 +68,24 @@ services:
     environment:
       - TZ=$TZ
       - HTPASSWD_FILE=/shared/.htpasswd
+    labels:
+      - "traefik.enable=true"
+      ### HTTP-to-HTTPS Redirect
+      - "traefik.http.routers.http-catchall.entrypoints=http"
+      - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+      ### HTTP Routers
+      - "traefik.http.routers.traefik-rtr.entrypoints=https"
+      - "traefik.http.routers.traefik-rtr.rule=Host(`ns.$DOMAINNAME`)"# && PathPrefix(`/traefik`)"
+      - "traefik.http.routers.traefik-rtr.tls={}"
+      ### Middlewares
+      - "traefik.http.middlewares.strip-traefik-path.stripprefix.prefixes=/traefik"
+      - "traefik.http.middlewares.strip-traefik-path.stripprefix.forceSlash=false"
+      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file,strip-traefik-path"
+      ### Services - API
+      - "traefik.http.routers.traefik-rtr.service=api@internal"
 
   whoami:
     image: "traefik/whoami"
@@ -87,10 +98,13 @@ services:
     labels:
       - "traefik.enable=true"
       ### Routers
-      - "traefik.http.routers.whoami-rtr.entrypoints=http,https"
-      - "traefik.http.routers.whoami-rtr.rule=Host(`ns.$DOMAINNAME`)"
+      - "traefik.http.routers.whoami-rtr.entrypoints=https"
+      - "traefik.http.routers.whoami-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/whoami`)"
+      - "traefik.http.routers.whoami-rtr.tls={}"
       ### Middlewares
-      - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file"
+      - "traefik.http.middlewares.strip-whoami-path.stripprefix.prefixes=/whoami"
+      - "traefik.http.middlewares.strip-whoami-path.stripprefix.forceSlash=false"
+      - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file,strip-whoami-path"
       ### Services
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"

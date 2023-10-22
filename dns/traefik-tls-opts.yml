@@ -16,5 +16,6 @@ tls:
       curvePreferences:
         - CurveP521
         - CurveP384
-      sniStrict: true
+      ## Do not allow connections from clients that do not specify a server_name extension or don't match any of the configured certificates.
+      #sniStrict: true
 

@@ -18,7 +18,7 @@ http:
       compress: {}
 
     # HTTP -> HTTPS
-    middlewares-https-redirectscheme:
+    middlewares-https-redirect:
       redirectScheme:
         scheme: https
         permanent: true
