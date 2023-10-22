@@ -13,7 +13,7 @@ networks:
 services:
   traefik:
     container_name: traefik
-    image: traefik:chevrotin  # the chevrotin tag refers to v2.2.x
+    image: traefik:2.7
     restart: unless-stopped
     networks: 
       - traefik_proxy
