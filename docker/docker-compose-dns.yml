@@ -75,9 +75,6 @@ services:
     environment:
       - TZ=$TZ
       - HTPASSWD_FILE=/shared/.htpasswd
-    #labels:
-      #- "traefik.enable=true"
-      #- "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file"
 
   whoami:
     image: "traefik/whoami"
