@@ -1,7 +1,5 @@
 ---
 - hosts: kleo.local
-#  become: yes
-
   tasks:
   - name: Create ~/docker/... dirs
     file:
@@ -38,12 +36,10 @@
       - { name: "traefik.log" }
       - { name: "access.log" }
 
-  # Ansible does not support docker-compose versions above 2 yet
-  - name: Deploy docker-compose stack
+  - name: Create and start docker services
     become: yes
-    shell:
-      cmd: docker-compose up -d
-      chdir: "{{ docker_dir }}"
+    docker_compose:
+      project_src: "{{ docker_dir }}"
 
   vars:
     docker_dir: "/home/{{ ansible_user_id }}/docker"
