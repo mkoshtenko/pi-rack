@@ -26,6 +26,7 @@
       - { from: "../docker/docker-compose-dns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "755", become: no }
       - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "755", become: no }
       - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "755", become: no }
+      - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "755", become: no }
 
   - name: Create empty traefik log files
     file:
