@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    middlewares-basic-auth:
+      basicAuth:
+        usersFile: "/shared/.htpasswd"
+        realm: "Traefik Basic Auth"
+
