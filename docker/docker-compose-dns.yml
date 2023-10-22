@@ -14,7 +14,8 @@ services:
   traefik:
     container_name: traefik
     image: traefik:2.7
-    restart: unless-stopped
+    ## Always restart the container if it stops. If it's manually stopped, it's restarted only when Docker daemon restarts or the container itself is manually restarted.
+    restart: always
     networks: 
       - traefik_proxy
     security_opt:
