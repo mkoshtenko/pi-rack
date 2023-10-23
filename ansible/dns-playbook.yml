@@ -13,6 +13,7 @@
       - { name: "{{ logs_dir }}" }
       - { name: "{{ traefik_dir }}" }
       - { name: "{{ traefik_dir }}/rules" }
+      - { name: "{{ pihole_dir }}" }
 
   - name: Move files to the host
     become: "{{ item.become }}"
@@ -50,4 +51,5 @@
     app_dir: "{{ docker_dir }}/app"
     logs_dir: "{{ docker_dir }}/logs"
     traefik_dir: "{{ app_dir }}/traefik"
+    pihole_dir: "{{ app_dir }}/pihole"
 

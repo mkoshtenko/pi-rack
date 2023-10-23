@@ -109,3 +109,34 @@ services:
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
 
+  pihole:
+    image: pihole/pihole:latest
+    container_name: "pihole"
+    networks:
+      - traefik_proxy
+    ports:
+      # port 80 will go through Traefik
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - $DOCKERDIR/app/pihole:/etc/pihole
+      - $DOCKERDIR/logs:/var/log/pihole
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    environment:
+      - TZ=$TZ
+      - WEBPASSWORD=$PIHOLEPASS
+      - VIRTUAL_HOST=ns.$DOMAINNAME
+    labels:
+      - "traefik.enable=true"
+      ### Routers
+      - "traefik.http.routers.pihole-rtr.entrypoints=https"
+      - "traefik.http.routers.pihole-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.pihole-rtr.tls={}"
+      ### Middlewares
+      - "traefik.http.routers.pihole-rtr.middlewares=chain-no-auth@file"
+      ### Services
+      - "traefik.http.routers.pihole-rtr.service=pihole-svc"
+      - "traefik.http.services.pihole-svc.loadbalancer.server.port=80"
+
