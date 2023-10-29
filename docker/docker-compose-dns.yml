@@ -78,12 +78,10 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
       ### HTTP Routers
       - "traefik.http.routers.traefik-rtr.entrypoints=https"
-      - "traefik.http.routers.traefik-rtr.rule=Host(`ns.$DOMAINNAME`)"# && PathPrefix(`/traefik`)"
+      - "traefik.http.routers.traefik-rtr.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik-rtr.tls={}"
       ### Middlewares
-      - "traefik.http.middlewares.strip-traefik-path.stripprefix.prefixes=/traefik"
-      - "traefik.http.middlewares.strip-traefik-path.stripprefix.forceSlash=false"
-      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file,strip-traefik-path"
+      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file"
       ### Services - API
       - "traefik.http.routers.traefik-rtr.service=api@internal"
 
@@ -99,12 +97,10 @@ services:
       - "traefik.enable=true"
       ### Routers
       - "traefik.http.routers.whoami-rtr.entrypoints=https"
-      - "traefik.http.routers.whoami-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/whoami`)"
+      - "traefik.http.routers.whoami-rtr.rule=Host(`whoami.$DOMAINNAME`)"
       - "traefik.http.routers.whoami-rtr.tls={}"
       ### Middlewares
-      - "traefik.http.middlewares.strip-whoami-path.stripprefix.prefixes=/whoami"
-      - "traefik.http.middlewares.strip-whoami-path.stripprefix.forceSlash=false"
-      - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file,strip-whoami-path"
+      - "traefik.http.routers.whoami-rtr.middlewares=chain-no-auth@file"
       ### Services
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
@@ -135,7 +131,7 @@ services:
       - "traefik.enable=true"
       ### Routers
       - "traefik.http.routers.pihole-rtr.entrypoints=https"
-      - "traefik.http.routers.pihole-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.pihole-rtr.rule=Host(`ns.$DOMAINNAME`)"
       - "traefik.http.routers.pihole-rtr.tls={}"
       ### Middlewares
       - "traefik.http.routers.pihole-rtr.middlewares=chain-no-auth@file"
