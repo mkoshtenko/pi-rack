@@ -30,6 +30,7 @@ cp pihole-custom.list.example pihole-custom.list
 ```
 ### Troubleshooting
 - `pihole -g` returns DNS resolution is currently unavailable error
+
 Make sure `/etc/resolv.conf` inside the container has the following content:
 ```
 search home
