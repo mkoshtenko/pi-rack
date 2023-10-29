@@ -23,24 +23,25 @@
     loop:
       - { from: "../dns/.env", to: "{{ docker_dir }}/.env", mode: "600", become: yes }
       - { from: "../dns/.htpasswd", to: "{{ shared_dir }}/.htpasswd", mode: "600", become: yes }
-      - { from: "../docker/docker-compose-dns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "755", become: no }
-      - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "755", become: no }
-      - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "755", become: no }
-      - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "755", become: no }
+      - { from: "../docker/docker-compose-dns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "644", become: no }
+      - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "644", become: no }
+      - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "644", become: no }
+      - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "644", become: no }
 
-  - name: Create empty traefik log files
+  - name: Create empty log files
     file:
       path: "{{ logs_dir }}/{{ item.name }}"
       state: touch
-      mode: '755'
+      mode: '644'
       modification_time: preserve
       access_time: preserve
     loop:
       - { name: "traefik.log" }
       - { name: "access.log" }
+      - { name: "error-pihole.log" }
 
   - name: Create and start docker services
-    become: yes
+    become: yes # Access to .env and other root-owned sensitive files
     docker_compose:
       project_src: "{{ docker_dir }}"
 
@@ -50,5 +51,5 @@
     app_dir: "{{ docker_dir }}/app"
     logs_dir: "{{ docker_dir }}/logs"
     traefik_dir: "{{ app_dir }}/traefik"
-    pihole_dir: "{{ app_dir }}/pihole"  # will be created by docker-compose
+    pihole_dir: "{{ app_dir }}/pihole"  # Will be created by docker-compose
 

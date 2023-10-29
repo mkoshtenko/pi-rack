@@ -110,6 +110,7 @@ services:
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
 
   pihole:
+    ## TODO: Add security_opt:no-new-privileges:true when pihole can run without sudo
     image: pihole/pihole:latest
     container_name: "pihole"
     networks:
@@ -122,8 +123,7 @@ services:
       - $DOCKERDIR/app/pihole:/etc/pihole
       - $DOCKERDIR/app/dnsmasq.d:/etc/dnsmasq.d
       - $DOCKERDIR/logs:/var/log/pihole
-    security_opt:
-      - no-new-privileges:true
+      - $DOCKERDIR/logs/error-pihole.log:/var/log/lighttpd/error-pihole.log
     restart: unless-stopped
     environment:
       - TZ=$TZ
