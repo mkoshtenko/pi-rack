@@ -120,6 +120,7 @@ services:
       - "53:53/udp"
     volumes:
       - $DOCKERDIR/app/pihole:/etc/pihole
+      - $DOCKERDIR/app/dnsmasq.d:/etc/dnsmasq.d
       - $DOCKERDIR/logs:/var/log/pihole
     security_opt:
       - no-new-privileges:true
@@ -128,6 +129,8 @@ services:
       - TZ=$TZ
       - WEBPASSWORD=$PIHOLEPASS
       - VIRTUAL_HOST=ns.$DOMAINNAME
+      - PIHOLE_UID=1000
+      - PIHOLE_GID=1000
     labels:
       - "traefik.enable=true"
       ### Routers
