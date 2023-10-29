@@ -1,5 +1,18 @@
 # Content for DNS Pi
 
+Hardware:
+- RPi 4 Model B
+  - RAM 4GB
+  - Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.8GHz
+
+OS Installation:
+- Latest Raspberry Pi OS Lite (64-bit). tested with:
+  -  Debian 11 (bullseye)
+  -  Debian 12 (bookworm)
+- Set hostname
+- Set IPv4 address
+- Enable ssh access
+
 host: kleo
 IP: 192.168.1.2
 
