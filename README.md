@@ -11,26 +11,7 @@ Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/U
 Note: Requires a custom adapter for the rack mount
 
 ## DNS
-Hardware:
-- RPi 4 Model B
-  - RAM 4GB
-  - Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.8GHz
-
-OS Installation:
-- Latest Raspberry Pi OS Lite (64-bit). tested with:
-  -  Debian 11 (bullseye)
-  -  Debian 12 (bookworm)
-- Set hostname
-- Set IPv4 address
-- Enable ssh access
-
-```
-# /etc/dhcpcd.conf example
-interface eth0
-static ip_address=192.168.1.2/24
-static routers=192.168.1.1
-static domain_name_servers=192.168.1.2
-```
+Check [DNS README](dns/README.md) for more setup info
 
 Overview:
 - [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
