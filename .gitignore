@@ -1,7 +1,8 @@
 # OS X
 .DS_Store
 
-# secrets
+# secrets created from .example files
 .htpasswd
 .env
 devices.ini
+pihole-custom.list

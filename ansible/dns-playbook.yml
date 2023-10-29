@@ -13,6 +13,7 @@
       - { name: "{{ logs_dir }}" }
       - { name: "{{ traefik_dir }}" }
       - { name: "{{ traefik_dir }}/rules" }
+      - { name: "{{ pihole_dir }}" }
 
   - name: Move files to the host
     become: "{{ item.become }}"
@@ -27,6 +28,7 @@
       - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "644", become: no }
       - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "644", become: no }
       - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "644", become: no }
+      - { from: "../dns/pihole-custom.list", to: "{{ pihole_dir }}/custom.list", mode: "644", become: yes }
 
   - name: Create empty log files
     file:
