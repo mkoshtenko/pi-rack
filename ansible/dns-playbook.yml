@@ -14,6 +14,7 @@
       - { name: "{{ traefik_dir }}" }
       - { name: "{{ traefik_dir }}/rules" }
       - { name: "{{ pihole_dir }}" }
+      - { name: "{{ unbound_dir }}" }
 
   - name: Move files to the host
     become: "{{ item.become }}"
@@ -28,7 +29,8 @@
       - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "644", become: no }
       - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "644", become: no }
       - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "644", become: no }
-      - { from: "../dns/pihole-custom.list", to: "{{ pihole_dir }}/custom.list", mode: "644", become: yes }
+      - { from: "../dns/pihole-custom.list", to: "{{ pihole_dir }}/custom.list", mode: "644", become: no }
+      - { from: "../dns/unbound.conf", to: "{{ unbound_dir }}/unbound.conf", mode: "644", become: no }
 
   - name: Create empty log files
     file:
@@ -41,6 +43,7 @@
       - { name: "traefik.log" }
       - { name: "access.log" }
       - { name: "error-pihole.log" }
+      - { name: "unbound.log" }
 
   - name: Create and start docker services
     become: yes # Access to .env and other root-owned sensitive files
@@ -53,5 +56,6 @@
     app_dir: "{{ docker_dir }}/app"
     logs_dir: "{{ docker_dir }}/logs"
     traefik_dir: "{{ app_dir }}/traefik"
-    pihole_dir: "{{ app_dir }}/pihole"  # Will be created by docker-compose
+    pihole_dir: "{{ app_dir }}/pihole"
+    unbound_dir: "{{ app_dir }}/unbound"
 

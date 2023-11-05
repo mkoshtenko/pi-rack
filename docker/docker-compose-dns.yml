@@ -9,6 +9,12 @@ networks:
     ipam:
       config:
         - subnet: 192.168.90.0/24
+  dns:
+    name: dns_network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/28
 
 services:
   traefik:
@@ -86,8 +92,8 @@ services:
       - "traefik.http.routers.traefik-rtr.service=api@internal"
 
   whoami:
-    image: "traefik/whoami"
-    container_name: "whoami"
+    container_name: whoami
+    image: traefik/whoami
     networks:
       - traefik_proxy
     security_opt:
@@ -107,14 +113,21 @@ services:
 
   pihole:
     ## TODO: Add security_opt:no-new-privileges:true when pihole can run without sudo
+    container_name: pihole
     image: pihole/pihole:latest
-    container_name: "pihole"
     ports:
       # port 80 will go through Traefik
-      - "53:53/tcp"
-      - "53:53/udp"
+      - target: 53
+        published: 53
+        protocol: tcp
+        mode: host
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
     networks:
       - traefik_proxy
+      - dns
     dns:
       - 127.0.0.1
     volumes:
@@ -141,4 +154,19 @@ services:
       ### Services
       - "traefik.http.routers.pihole-rtr.service=pihole-svc"
       - "traefik.http.services.pihole-svc.loadbalancer.server.port=80"
+
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    networks:
+      - dns
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 127.0.0.1:5335:53/tcp
+      - 127.0.0.1:5335:53/udp
+    volumes:
+      - $DOCKERDIR/app/unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
+      - $DOCKERDIR/logs/unbound.log:/opt/unbound/etc/unbound/unbound.log
+    restart: unless-stopped
 
