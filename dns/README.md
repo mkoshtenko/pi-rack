@@ -42,7 +42,14 @@ Create pihole-custom.list file and list your local DNS records
 cp pihole-custom.list.example pihole-custom.list
 ```
 ### Troubleshooting
-- work inside the container with `docker exec -it pihole bash`
+work inside the container with `docker exec -it pihole bash`
+- Unable to save any configs from PiHole admin page
+Make sure the following config does NOT set for the pihole container inside the docker-compose file
+```
+security_opt:
+  - no-new-privileges:true
+```
+
 - `pihole -g` returns DNS resolution is currently unavailable error
 
 Make sure `/etc/resolv.conf` inside the container has the following content:
