@@ -18,7 +18,7 @@ Overview:
   - Handle client DNS requests
   - Delegate requests to the local Unbound installation
 - [Unbound](https://unbound.docs.nlnetlabs.nl/en/latest/) - a secure recursive DNS server
-  - Listen only for queries from the local Pi-Hole installation (on port 5335)
+  - Listen only for queries from the local Pi-Hole installation 
   - Listen for both UDP and TCP requests
   - Verify DNSSEC signatures, discarding BOGUS domains
 - [Traefik](https://doc.traefik.io/traefik/getting-started/quick-start/) - reverse proxy
