@@ -36,10 +36,10 @@ Create .htpasswd file and generate password for traefik web UI base auth
 cp .htpasswd.example .htpasswd
 ```
 
-## Pihole
-Create pihole-custom.list file and list your local DNS records
+## Unbound
+Create a-records.conf file and list your local DNS records
 ```
-cp pihole-custom.list.example pihole-custom.list
+cp a-records.conf.example a-records.conf
 ```
 ### Troubleshooting
 work inside the container with `docker exec -it pihole bash`
