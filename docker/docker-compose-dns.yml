@@ -126,6 +126,8 @@ services:
       - traefik_proxy
     dns:
       - 127.0.0.1
+    depends_on:
+      - unbound
     volumes:
       - $DOCKERDIR/app/pihole:/etc/pihole
       - $DOCKERDIR/app/dnsmasq.d:/etc/dnsmasq.d
