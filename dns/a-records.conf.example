@@ -1,0 +1,16 @@
+    local-zone: "my-domain.local." static
+
+# A Record
+    # Router 
+    local-data: "root.my-domain.local. IN A 192.168.1.1"
+    # DNS
+    local-data: "ns.my-domain.local. IN A 192.168.1.2"
+    local-data: "traefik.my-domain.local. IN A 192.168.1.2"
+    local-data: "whoami.my-domain.local. IN A 192.168.1.2"
+
+# PTR Record
+    local-data-ptr: "192.168.1.1 root.my-domain.local"
+    local-data-ptr: "192.168.1.2 ns.my-domain.local"
+    local-data-ptr: "192.168.1.2 whoami.my-domain.local"
+    local-data-ptr: "192.168.1.2 traefik.my-domain.local"
+

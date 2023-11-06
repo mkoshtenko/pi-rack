@@ -5,4 +5,5 @@
 .htpasswd
 .env
 devices.ini
-pihole-custom.list
+a-records.conf
+

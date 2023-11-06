@@ -158,13 +158,14 @@ services:
     hostname: unbound
     networks:
       - traefik_proxy
-    #security_opt:
-      #- no-new-privileges:true
+    security_opt:
+      - no-new-privileges:true
     ports:
       - 53/tcp
       - 53/udp
     volumes:
       - $DOCKERDIR/app/unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
+      - $DOCKERDIR/app/unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
       - $DOCKERDIR/logs/unbound.log:/opt/unbound/etc/unbound/unbound.log
     restart: always
 
