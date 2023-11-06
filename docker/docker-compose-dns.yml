@@ -140,6 +140,7 @@ services:
       - PIHOLE_UID=1000
       - PIHOLE_GID=1000
       - PIHOLE_DNS_=unbound # Use unbound container as upstream DNS
+      - QUERY_LOGGING=false
     labels:
       - "traefik.enable=true"
       ### Routers
