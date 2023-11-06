@@ -160,7 +160,9 @@ services:
     image: mvance/unbound-rpi:latest
     hostname: unbound
     networks:
-      - traefik_proxy
+      traefik_proxy:
+        # Use a static IP to improve pi-hole upstream stats
+        ipv4_address: 192.168.90.123
     security_opt:
       - no-new-privileges:true
     ports:
