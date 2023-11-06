@@ -14,12 +14,15 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 192.168.100.0/28
+        - subnet: 192.168.100.0/24
+          gateway: 192.168.100.1
+          ip_range: 192.168.100.5/30 # 192.168.100.5 and 192.168.100.6
 
 services:
   traefik:
     container_name: traefik
     image: traefik:2.10
+    hostname: traefik
     ## Always restart the container if it stops. If it's manually stopped, it's restarted only when Docker daemon restarts or the container itself is manually restarted.
     restart: always
     networks: 
@@ -94,6 +97,7 @@ services:
   whoami:
     container_name: whoami
     image: traefik/whoami
+    hostname: whoami
     networks:
       - traefik_proxy
     security_opt:
@@ -115,6 +119,7 @@ services:
     ## TODO: Add security_opt:no-new-privileges:true when pihole can run without sudo
     container_name: pihole
     image: pihole/pihole:latest
+    hostname: pi-hole
     ports:
       # port 80 will go through Traefik
       - target: 53
@@ -126,8 +131,9 @@ services:
         protocol: udp
         mode: host
     networks:
-      - traefik_proxy
-      - dns
+      traefik_proxy:
+      dns:
+        ipv4_address: 192.168.100.5
     dns:
       - 127.0.0.1
     volumes:
@@ -135,7 +141,7 @@ services:
       - $DOCKERDIR/app/dnsmasq.d:/etc/dnsmasq.d
       - $DOCKERDIR/logs:/var/log/pihole
       - $DOCKERDIR/logs/error-pihole.log:/var/log/lighttpd/error-pihole.log
-    restart: unless-stopped
+    restart: always
     environment:
       - TZ=$TZ
       - WEBPASSWORD=$PIHOLEPASS
@@ -157,16 +163,18 @@ services:
 
   unbound:
     container_name: unbound
-    image: mvance/unbound:latest
+    image: mvance/unbound-rpi:latest
+    hostname: unbound
     networks:
-      - dns
-    security_opt:
-      - no-new-privileges:true
+      dns:
+        ipv4_address: 192.168.100.6
+    #security_opt:
+      #- no-new-privileges:true
     ports:
-      - 127.0.0.1:5335:53/tcp
-      - 127.0.0.1:5335:53/udp
+      - 53/tcp
+      - 53/udp
     volumes:
       - $DOCKERDIR/app/unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
       - $DOCKERDIR/logs/unbound.log:/opt/unbound/etc/unbound/unbound.log
-    restart: unless-stopped
+    restart: always
 
