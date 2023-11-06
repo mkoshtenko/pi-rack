@@ -9,14 +9,6 @@ networks:
     ipam:
       config:
         - subnet: 192.168.90.0/24
-  dns:
-    name: dns_network
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.100.0/24
-          gateway: 192.168.100.1
-          ip_range: 192.168.100.5/30 # 192.168.100.5 and 192.168.100.6
 
 services:
   traefik:
@@ -131,9 +123,7 @@ services:
         protocol: udp
         mode: host
     networks:
-      traefik_proxy:
-      dns:
-        ipv4_address: 192.168.100.5
+      - traefik_proxy
     dns:
       - 127.0.0.1
     volumes:
@@ -149,8 +139,7 @@ services:
       - FTLCONF_LOCAL_IPV4=192.168.1.2
       - PIHOLE_UID=1000
       - PIHOLE_GID=1000
-      # Use unbound container as upstream DNS
-      - PIHOLE_DNS_=unbound
+      - PIHOLE_DNS_=unbound # Use unbound container as upstream DNS
     labels:
       - "traefik.enable=true"
       ### Routers
@@ -168,8 +157,7 @@ services:
     image: mvance/unbound-rpi:latest
     hostname: unbound
     networks:
-      dns:
-        ipv4_address: 192.168.100.6
+      - traefik_proxy
     #security_opt:
       #- no-new-privileges:true
     ports:
