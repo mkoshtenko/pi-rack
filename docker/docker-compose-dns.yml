@@ -4,7 +4,7 @@ networks:
   default:
     driver: bridge
   traefik_proxy:
-    name: traefik_proxy
+    name: traefik-net
     driver: bridge
     ipam:
       config:
