@@ -149,6 +149,8 @@ services:
       - FTLCONF_LOCAL_IPV4=192.168.1.2
       - PIHOLE_UID=1000
       - PIHOLE_GID=1000
+      # Use unbound container as upstream DNS
+      - PIHOLE_DNS_=unbound
     labels:
       - "traefik.enable=true"
       ### Routers
