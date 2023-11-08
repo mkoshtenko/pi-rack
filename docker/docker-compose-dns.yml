@@ -11,6 +11,8 @@ networks:
         - subnet: 192.168.90.0/24
 
 services:
+  # traefik.domain.local
+  # TODO: ns.domain.local/traefik
   traefik:
     container_name: traefik
     image: traefik:2.10
@@ -36,7 +38,7 @@ services:
       ### Logs
       - --log=true
       - --log.filePath=/logs/traefik.log
-      - --log.level=INFO # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - --log.level=ERROR # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
       - --accessLog=true
       - --accessLog.filePath=/logs/access.log
       - --accessLog.bufferingSize=100 # Configuring a buffer of 100 lines
@@ -86,6 +88,7 @@ services:
       ### Services - API
       - "traefik.http.routers.traefik-rtr.service=api@internal"
 
+  # whoami.domain.local
   whoami:
     container_name: whoami
     image: traefik/whoami
@@ -107,6 +110,7 @@ services:
       - "traefik.http.routers.whoami-rtr.service=whoami-svc"
       - "traefik.http.services.whoami-svc.loadbalancer.server.port=80"
 
+  # ns.domain.local
   pihole:
     ## TODO: Add security_opt:no-new-privileges:true when pihole can run without sudo
     container_name: pihole
@@ -155,6 +159,7 @@ services:
       - "traefik.http.routers.pihole-rtr.service=pihole-svc"
       - "traefik.http.services.pihole-svc.loadbalancer.server.port=80"
 
+  # No external access
   unbound:
     container_name: unbound
     image: mvance/unbound-rpi:latest
@@ -173,4 +178,34 @@ services:
       - $DOCKERDIR/app/unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
       - $DOCKERDIR/logs/unbound.log:/opt/unbound/etc/unbound/unbound.log
     restart: always
+
+  # ns.domain.local/portainer
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    hostname: portainer
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    security_opt:
+      - no-new-privileges:true
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $DOCKERDIR/app/portainer:/data
+    environment:
+      - TZ=$TZ
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.portainer-rtr.entrypoints=https"
+      - "traefik.http.routers.portainer-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/portainer`)"
+      - "traefik.http.routers.portainer-rtr.tls={}"
+      ## Middlewares
+      - "traefik.http.middlewares.strip-portainer-path.stripprefix.prefixes=/portainer"
+      - "traefik.http.routers.portainer-rtr.middlewares=chain-no-auth@file,strip-portainer-path"
+      ## HTTP Services
+      - "traefik.http.routers.portainer-rtr.service=portainer-svc"
+      - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
 
