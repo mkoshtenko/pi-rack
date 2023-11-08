@@ -59,6 +59,28 @@ ipv4.gateway:                           192.168.1.1
 ...
 ```
 
+## Check the mounted partitions
+List all connected block devices using the `lsblk` command.
+```
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0 447.1G  0 disk
+├─sda1   8:1    0   512M  0 part /boot/firmware
+└─sda2   8:2    0 446.6G  0 part /
+```
+
+Use the ‘df -h’ command to verify that the partitions are successfully mounted and listed in the output.
+```
+Filesystem      Size  Used Avail Use% Mounted on
+udev            3.8G     0  3.8G   0% /dev
+tmpfs           782M  1.1M  780M   1% /run
+/dev/sda2       440G  2.1G  416G   1% /
+tmpfs           3.9G     0  3.9G   0% /dev/shm
+tmpfs           5.0M   12K  5.0M   1% /run/lock
+/dev/sda1       510M   61M  450M  12% /boot/firmware
+tmpfs           782M     0  782M   0% /run/user/1000
+```
+
+
 ## Docker
 Create .env inside the `mon/` folder and modify its content.
 ```
