@@ -5,7 +5,7 @@ coco.local ansible_host=192.168.1.1
 kleo ansible_host=192.168.1.2
 
 [mon]
-millie ansible_host=192.168.1.16
+millie ansible_host=192.168.1.16 
 
 [rpios:children]
 ns
@@ -13,4 +13,5 @@ mon
 
 [all:vars]
 ansible_user=admin # Assuming all hosts have the same user
+ansible_python_interpreter=/usr/bin/python3
 

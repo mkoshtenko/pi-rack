@@ -29,5 +29,6 @@
       append: yes
 
   - name: Install docker-compose
-    pip:
+    apt:
       name: docker-compose
+
