@@ -1,7 +1,16 @@
-[owrt]
-coco.local ansible_host=192.168.1.1 ansible_user=admin
+[root]
+coco.local ansible_host=192.168.1.1
 
-[rpios]
-kleo.local ansible_host=192.168.1.2 ansible_user=admin
-lady.local ansible_host=192.168.1.5 ansible_user=admin
-millie.local ansible_host=192.168.1.16 ansible_user=admin
+[ns]
+kleo ansible_host=192.168.1.2
+
+[mon]
+millie ansible_host=192.168.1.16
+
+[rpios:children]
+ns
+mon
+
+[all:vars]
+ansible_user=admin # Assuming all hosts have the same user
+
