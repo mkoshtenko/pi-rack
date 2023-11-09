@@ -1,0 +1,35 @@
+---
+- hosts: mon
+  tasks:
+  - name: Create ~/docker/... dirs
+    file:
+      path: "{{ item.name }}"
+      state: directory
+      mode: '0755'
+    loop:
+      - { name: "{{ docker_dir }}" }
+      - { name: "{{ shared_dir }}" }
+      - { name: "{{ app_dir }}" }
+      - { name: "{{ logs_dir }}" }
+
+  - name: Move files to the host
+    become: "{{ item.become }}"
+    copy:
+      src: "{{ item.from }}"
+      dest: "{{ item.to }}"
+      mode: "{{ item.mode }}"
+    loop:
+      - { from: "../mon/.env", to: "{{ docker_dir }}/.env", mode: "600", become: yes }
+      - { from: "../docker/docker-compose-mon.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "644", become: no }
+
+  - name: Create and start docker services
+    become: yes # Access to .env and other root-owned sensitive files
+    docker_compose:
+      project_src: "{{ docker_dir }}"
+
+  vars:
+    docker_dir: "/home/{{ ansible_user_id }}/docker"
+    shared_dir: "{{ docker_dir }}/shared"
+    app_dir: "{{ docker_dir }}/app"
+    logs_dir: "{{ docker_dir }}/logs"
+

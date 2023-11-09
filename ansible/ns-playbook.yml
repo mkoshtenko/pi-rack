@@ -1,5 +1,5 @@
 ---
-- hosts: kleo.local
+- hosts: ns
   tasks:
   - name: Create ~/docker/... dirs
     file:
@@ -22,14 +22,14 @@
       dest: "{{ item.to }}"
       mode: "{{ item.mode }}"
     loop:
-      - { from: "../dns/.env", to: "{{ docker_dir }}/.env", mode: "600", become: yes }
-      - { from: "../dns/.htpasswd", to: "{{ shared_dir }}/.htpasswd", mode: "600", become: yes }
-      - { from: "../docker/docker-compose-dns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "644", become: no }
-      - { from: "../dns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "644", become: no }
-      - { from: "../dns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "644", become: no }
-      - { from: "../dns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "644", become: no }
-      - { from: "../dns/unbound.conf", to: "{{ unbound_dir }}/unbound.conf", mode: "644", become: no }
-      - { from: "../dns/a-records.conf", to: "{{ unbound_dir }}/a-records.conf", mode: "644", become: no }
+      - { from: "../ns/.env", to: "{{ docker_dir }}/.env", mode: "600", become: yes }
+      - { from: "../ns/.htpasswd", to: "{{ shared_dir }}/.htpasswd", mode: "600", become: yes }
+      - { from: "../docker/docker-compose-ns.yml", to: "{{ docker_dir }}/docker-compose.yml", mode: "644", become: no }
+      - { from: "../ns/traefik-middlewares.yml", to: "{{ traefik_dir }}/rules/middlewares.yml", mode: "644", become: no }
+      - { from: "../ns/traefik-middlewares-chains.yml", to: "{{ traefik_dir }}/rules/middlewares-chains.yml", mode: "644", become: no }
+      - { from: "../ns/traefik-tls-opts.yml", to: "{{ traefik_dir }}/rules/tls-opts.yml", mode: "644", become: no }
+      - { from: "../ns/unbound.conf", to: "{{ unbound_dir }}/unbound.conf", mode: "644", become: no }
+      - { from: "../ns/a-records.conf", to: "{{ unbound_dir }}/a-records.conf", mode: "644", become: no }
 
   - name: Create empty log files
     file:
