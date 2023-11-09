@@ -109,3 +109,8 @@ The following command will install docker and docker-compose with necessary opti
 ```
 ansible-playbook -i devices.ini -l mon ansible/docker-playbook.yml
 ```
+
+Prepare necessary folder structure and execute `docker-compose-mon.yml` on the host by running:
+```
+ansible-playbook -i devices.ini ansible/mon-playbook.yml
+```
