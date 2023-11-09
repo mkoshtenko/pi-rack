@@ -11,7 +11,7 @@ Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/U
 Note: Requires a custom adapter for the rack mount
 
 ## DNS
-Check [ns README](ns/README.md) for more setup info
+Check [ns/README](ns/README.md) for more setup info
 
 Overview:
 - [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
@@ -34,6 +34,6 @@ Links:
 Pi-VPN
 
 ## Monitoring
-Check [mon README](mon/README.md) for more setup info
+Check [mon/README](mon/README.md) for more setup info
 
 Zabbix
