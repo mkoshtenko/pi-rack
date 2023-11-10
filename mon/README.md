@@ -115,7 +115,7 @@ Prepare necessary folder structure and execute `docker-compose-mon.yml` on the h
 ansible-playbook -i devices.ini ansible/mon-playbook.yml
 ```
 
-# Zabbiz
+# Zabbix
 Zabbix is software that monitors numerous parameters of a network and the health and integrity of servers. Zabbix uses a flexible notification mechanism that allows users to configure e-mail based alerts for virtually any event. This allows a fast reaction to server problems. Zabbix offers excellent reporting and data visualisation features based on the stored data.
 
 [Container installation manual](https://www.zabbix.com/documentation/current/en/manual/installation/containers)
