@@ -114,3 +114,29 @@ Prepare necessary folder structure and execute `docker-compose-mon.yml` on the h
 ```
 ansible-playbook -i devices.ini ansible/mon-playbook.yml
 ```
+
+# Zabbiz
+Zabbix is software that monitors numerous parameters of a network and the health and integrity of servers. Zabbix uses a flexible notification mechanism that allows users to configure e-mail based alerts for virtually any event. This allows a fast reaction to server problems. Zabbix offers excellent reporting and data visualisation features based on the stored data.
+
+[Container installation manual](https://www.zabbix.com/documentation/current/en/manual/installation/containers)
+
+## Zabbix web
+Zabbix web interface is a part of Zabbix software. It is used to manage resources under monitoring and view monitoring statistics.
+
+- Zabbix web-interface based on Nginx web server with PostgreSQL database support
+
+The docker exec command allows to run commands inside a Docker container. 
+The following command line will give you a bash shell inside your zabbix-web-nginx-pgsql container:
+```
+docker exec -ti zabbix-web /bin/bash
+```
+
+The Zabbix web interface log is available through Docker's container log:
+```
+docker logs zabbix-web
+```
+
+Use the user name `Admin` with password `zabbix` to log in as a Zabbix superuser. Access to all menu sections will be granted. 
+More details: https://www.zabbix.com/documentation/current/en/manual/quickstart/login
+
+
