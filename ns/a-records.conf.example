@@ -7,10 +7,12 @@
     local-data: "ns.my-domain.local. IN A 192.168.1.2"
     local-data: "traefik.my-domain.local. IN A 192.168.1.2"
     local-data: "whoami.my-domain.local. IN A 192.168.1.2"
+    local-data: "mon.my-damain.local. IN A 192.168.1.16"
 
 # PTR Record
     local-data-ptr: "192.168.1.1 root.my-domain.local"
     local-data-ptr: "192.168.1.2 ns.my-domain.local"
     local-data-ptr: "192.168.1.2 whoami.my-domain.local"
     local-data-ptr: "192.168.1.2 traefik.my-domain.local"
+    local-data-ptr: "192.168.1.16 mon.my-domain.local"
 
