@@ -11,6 +11,8 @@
       - { name: "{{ shared_dir }}" }
       - { name: "{{ app_dir }}" }
       - { name: "{{ logs_dir }}" }
+      - { name: "{{ postgres_dir }}" }
+      - { name: "{{ zabbix_dir }}" }
 
   - name: Move files to the host
     become: "{{ item.become }}"
@@ -32,4 +34,6 @@
     shared_dir: "{{ docker_dir }}/shared"
     app_dir: "{{ docker_dir }}/app"
     logs_dir: "{{ docker_dir }}/logs"
+    postgres_dir: "{{ app_dir }}/postgresql"
+    zabbix_dir: "{{ app_dir }}/zabbix"
 
