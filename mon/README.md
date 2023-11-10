@@ -120,6 +120,21 @@ Zabbix is software that monitors numerous parameters of a network and the health
 
 [Container installation manual](https://www.zabbix.com/documentation/current/en/manual/installation/containers)
 
+## Zabbix server
+Zabbix server is the central process of Zabbix software.
+
+The server performs the polling and trapping of data, it calculates triggers, sends notifications to users. It is the central component to which Zabbix agents and proxies report data on availability and integrity of systems. The server can itself remotely check networked services (such as web servers and mail servers) using simple service checks.
+
+The docker exec command allows you to run commands inside a Docker container. 
+The following command line will give you a bash shell inside your zabbix-server-pgsql container:
+```
+docker exec -ti zabbix-server /bin/bash
+```
+The Zabbix server log is available through Docker's container log:
+```
+docker logs zabbix-server
+```
+
 ## Zabbix web
 Zabbix web interface is a part of Zabbix software. It is used to manage resources under monitoring and view monitoring statistics.
 
