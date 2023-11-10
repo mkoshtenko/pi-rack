@@ -120,7 +120,7 @@ Zabbix is software that monitors numerous parameters of a network and the health
 
 [Container installation manual](https://www.zabbix.com/documentation/current/en/manual/installation/containers)
 
-## Zabbix server
+## Zabbix Server
 Zabbix server is the central process of Zabbix software.
 
 The server performs the polling and trapping of data, it calculates triggers, sends notifications to users. It is the central component to which Zabbix agents and proxies report data on availability and integrity of systems. The server can itself remotely check networked services (such as web servers and mail servers) using simple service checks.
@@ -135,7 +135,7 @@ The Zabbix server log is available through Docker's container log:
 docker logs zabbix-server
 ```
 
-## Zabbix web
+## Zabbix Web
 Zabbix web interface is a part of Zabbix software. It is used to manage resources under monitoring and view monitoring statistics.
 
 - Zabbix web-interface based on Nginx web server with PostgreSQL database support
@@ -154,4 +154,28 @@ docker logs zabbix-web
 Use the user name `Admin` with password `zabbix` to log in as a Zabbix superuser. Access to all menu sections will be granted. 
 More details: https://www.zabbix.com/documentation/current/en/manual/quickstart/login
 
+## Zabbix Agent 2
+Zabbix agent is deployed on a monitoring target to actively monitor local resources and applications (hard drives, memory, processor statistics, etc.).
+The agent gathers operational information locally and reports data to Zabbix server for further processing. 
+
+Note: At the time of writing, the newest supported Raspberry Pi OS version is 11 (Bullseye). I'm trying to make it work on 12 (Bookworm) until the official release is ready.
+
+Download page for all supported host configurations: https://www.zabbix.com/download
+
+TODO: move to a playbook.
+a. Install Zabbix repository
+```
+wget https://repo.zabbix.com/zabbix/6.4/raspbian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian11_all.deb
+dpkg -i zabbix-release_6.4-1+debian11_all.deb
+apt update
+```
+b. Install Zabbix agent2
+```
+apt install zabbix-agent2 zabbix-agent2-plugin-*
+```
+c. Start Zabbix agent2 process and make it start at system boot
+```
+systemctl restart zabbix-agent2
+systemctl enable zabbix-agent2
+```
 
