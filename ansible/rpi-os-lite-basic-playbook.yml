@@ -3,14 +3,14 @@
   become: yes
 
   tasks:
-  - name: Run the equivalent of "apt-get update"
+  - name: Update list of available packages
     apt:
       update_cache: true
       cache_valid_time: 3600
   
-  - name: Update all packages to the latest version
+  - name: Upgrade the system by installing/upgrading packages
     apt:
-      upgrade: dist
+      upgrade: yes
   
   - name: Ensure Chrony (for time synchronization) is installed
     apt:
