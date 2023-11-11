@@ -160,22 +160,11 @@ The agent gathers operational information locally and reports data to Zabbix ser
 
 Note: At the time of writing, the newest supported Raspberry Pi OS version is 11 (Bullseye). I'm trying to make it work on 12 (Bookworm) until the official release is ready.
 
-Download page for all supported host configurations: https://www.zabbix.com/download
+Download instructions for all supported host configurations: https://www.zabbix.com/download
 
-TODO: move to a playbook.
-a. Install Zabbix repository
+Verify agent2 is enabled and running on the host:
 ```
-wget https://repo.zabbix.com/zabbix/6.4/raspbian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian11_all.deb
-dpkg -i zabbix-release_6.4-1+debian11_all.deb
-apt update
+systemctl status zabbix-agent2
 ```
-b. Install Zabbix agent2
-```
-apt install zabbix-agent2 zabbix-agent2-plugin-*
-```
-c. Start Zabbix agent2 process and make it start at system boot
-```
-systemctl restart zabbix-agent2
-systemctl enable zabbix-agent2
-```
+
 
