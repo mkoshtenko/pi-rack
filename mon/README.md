@@ -167,4 +167,8 @@ Verify agent2 is enabled and running on the host:
 systemctl status zabbix-agent2
 ```
 
+Agent2 logs:
+```
+cat /var/log/zabbix/zabbix_agent2.log
+```
 
