@@ -1,6 +1,9 @@
 # pi-rack
 Scripts and tools for Raspberry Pi devices in a home-lab environment
 
+Disclaimer: The setup scripts in this repo do not provide necessary security or privacy level for public deployments. 
+They are designed for LAN/home-lab hosts only. Use at your own risk.
+
 ## Rack Mount
 UCTRONICS Pi Rack Pro for Raspberry Pi 4B, 19" 1U Rack Mount, Support for 4 2.5" SSDs, Secure Shutdown, 0.96" Color Display for Raspberry Pi
 Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/UCTRONICS/SKU_RM0004
