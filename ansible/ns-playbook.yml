@@ -65,6 +65,16 @@
     with_items: 
       - "{{ ftl_config_status.results }}"
 
+  - name: Restart containers if necessary
+    become: yes
+    docker_compose:
+      project_src: "{{ docker_dir }}"
+      restarted: true
+      state: present
+    when:
+      - needs_pihole_restart is defined
+      - needs_pihole_restart is true
+
   vars:
     docker_dir: "/home/{{ ansible_user_id }}/docker"
     shared_dir: "{{ docker_dir }}/shared"
