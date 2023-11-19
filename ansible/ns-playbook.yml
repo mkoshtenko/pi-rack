@@ -49,6 +49,22 @@
     docker_compose:
       project_src: "{{ docker_dir }}"
 
+  - name: Update pihole-FTL config
+    lineinfile:
+      path: "{{ pihole_dir }}/pihole-FTL.conf"
+      regexp: "^{{ item.key }}=.+$"
+      line: "{{ item.key }}={{ item.value }}"
+      state: present
+    with_items:
+      - "{{ ftl_config }}"
+    register: ftl_config_status
+ 
+  - set_fact: needs_pihole_restart=true
+    when:
+      item is changed
+    with_items: 
+      - "{{ ftl_config_status.results }}"
+
   vars:
     docker_dir: "/home/{{ ansible_user_id }}/docker"
     shared_dir: "{{ docker_dir }}/shared"
@@ -57,4 +73,13 @@
     traefik_dir: "{{ app_dir }}/traefik"
     pihole_dir: "{{ app_dir }}/pihole"  # Will be created by docker-compose
     unbound_dir: "{{ app_dir }}/unbound"
+    ftl_config:
+      # Anonymous mode: This disables basically everything except the live anonymous statistics
+      # Set to 0 if you need full stats
+      - key: "PRIVACYLEVEL"
+        value: "3"
+      # Allow iCloud Private Relay, e.g. mask.icloud.com and mask-h2.icloud.com 
+      # Details: https://developer.apple.com/support/prepare-your-network-for-icloud-private-relay
+      - key: "BLOCK_ICLOUD_PR"
+        value: "false"
 
