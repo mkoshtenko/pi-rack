@@ -13,6 +13,7 @@ networks:
 services:
   # traefik.domain.local
   # TODO: ns.domain.local/traefik
+  # TODO: migrate to traefik:3.x
   traefik:
     container_name: traefik
     image: traefik:2.10
@@ -100,6 +101,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "com.centurylinklabs.watchtower.enable=true"
       ### Routers
       - "traefik.http.routers.whoami-rtr.entrypoints=https"
       - "traefik.http.routers.whoami-rtr.rule=Host(`whoami.$DOMAINNAME`)"
@@ -149,6 +151,7 @@ services:
       - QUERY_LOGGING=false
     labels:
       - "traefik.enable=true"
+      - "com.centurylinklabs.watchtower.enable=true"
       ### Routers
       - "traefik.http.routers.pihole-rtr.entrypoints=https"
       - "traefik.http.routers.pihole-rtr.rule=Host(`ns.$DOMAINNAME`)"
@@ -178,6 +181,8 @@ services:
       - $DOCKERDIR/app/unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf
       - $DOCKERDIR/logs/unbound.log:/opt/unbound/etc/unbound/unbound.log
     restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   # ns.domain.local/portainer
   portainer:
@@ -197,6 +202,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
+      - "com.centurylinklabs.watchtower.enable=true"
       ## HTTP Routers
       - "traefik.http.routers.portainer-rtr.entrypoints=https"
       - "traefik.http.routers.portainer-rtr.rule=Host(`ns.$DOMAINNAME`) && PathPrefix(`/portainer`)"
@@ -207,4 +213,21 @@ services:
       ## HTTP Services
       - "traefik.http.routers.portainer-rtr.service=portainer-svc"
       - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
+
+  # No external access
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=$TZ
+      - WATCHTOWER_CLEANUP=true                                        
+      - WATCHTOWER_INCLUDE_RESTARTING=true                 
+      - WATCHTOWER_SCHEDULE=0 0 9 * * 6 # every SAT at 9AM
+      - WATCHTOWER_LABEL_ENABLE=true
+      #- WATCHTOWER_DEBUG=true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
