@@ -214,7 +214,7 @@ services:
       - "traefik.http.routers.portainer-rtr.service=portainer-svc"
       - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
 
-  # No external access
+  # No internal/external access
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
@@ -222,12 +222,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      #- WATCHTOWER_DEBUG=true
       - TZ=$TZ
       - WATCHTOWER_CLEANUP=true                                        
       - WATCHTOWER_INCLUDE_RESTARTING=true                 
       - WATCHTOWER_SCHEDULE=0 0 9 * * 6 # every SAT at 9AM
       - WATCHTOWER_LABEL_ENABLE=true
-      #- WATCHTOWER_DEBUG=true
+      # Notifications
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=$WATCHTOWER_NOTIFICATION_URL
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-
