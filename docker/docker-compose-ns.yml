@@ -184,7 +184,6 @@ services:
     container_name: portainer
     image: portainer/portainer-ce:latest
     hostname: portainer
-    restart: unless-stopped
     networks:
       - traefik_proxy
     security_opt:
