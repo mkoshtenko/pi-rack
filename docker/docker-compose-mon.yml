@@ -28,6 +28,8 @@ services:
     depends_on:
       - postgres-server
     restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   zabbix-web:
     image: zabbix/zabbix-web-nginx-pgsql:alpine-6.4-latest
@@ -52,6 +54,8 @@ services:
       - postgres-server
       - zabbix-server
     restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   postgres-server:
     image: arm64v8/postgres:16-alpine
@@ -67,4 +71,25 @@ services:
     volumes:
       - $DOCKERDIR/app/postgresql:/var/lib/postgresql/data
     restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      #- WATCHTOWER_DEBUG=true
+      - TZ=$TZ
+      - WATCHTOWER_CLEANUP=true                                        
+      - WATCHTOWER_INCLUDE_RESTARTING=true                 
+      - WATCHTOWER_SCHEDULE=0 0 8 * * 6 # every SAT at 8AM
+      - WATCHTOWER_LABEL_ENABLE=true
+      # Notifications
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=$WATCHTOWER_NOTIFICATION_URL
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
