@@ -2,17 +2,18 @@
 - hosts: mon
   tasks:
   - name: Create ~/docker/... dirs
+    become: "{{ item.become }}"
     file:
       path: "{{ item.name }}"
       state: directory
       mode: '0755'
     loop:
-      - { name: "{{ docker_dir }}" }
-      - { name: "{{ shared_dir }}" }
-      - { name: "{{ app_dir }}" }
-      - { name: "{{ logs_dir }}" }
-      - { name: "{{ postgres_dir }}" }
-      - { name: "{{ zabbix_dir }}" }
+      - { name: "{{ docker_dir }}", become: no }
+      - { name: "{{ shared_dir }}", become: no }
+      - { name: "{{ app_dir }}", become: no }
+      - { name: "{{ logs_dir }}", become: no }
+      - { name: "{{ postgres_dir }}", become: yes }
+      - { name: "{{ zabbix_dir }}", become: no }
 
   - name: Move files to the host
     become: "{{ item.become }}"
