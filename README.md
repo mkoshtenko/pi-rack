@@ -1,17 +1,25 @@
-![Pi-rack cover photo](pi-rack.jpeg)
+![pi-rack cover photo](pi-rack.jpeg)
 
 # pi-rack
-Scripts and tools for Raspberry Pi devices in a home-lab environment
+Scripts and tools for Raspberry Pi devices in a home-lab environment.
 
-Disclaimer: The setup scripts in this repo do not provide necessary security or privacy level for public deployments. 
+Disclaimer: The setup scripts in this repo do not provide adequate security or privacy guarantees for public deployments.
 They are designed for LAN/home-lab hosts only. Use at your own risk.
+
+Provisioning is driven by Ansible — see [ansible/README](ansible/README.md) for inventory setup and the playbook bootstrap order.
+
+## Hosts
+| Group | Host   | IP           | Role                                |
+|-------|--------|--------------|-------------------------------------|
+| ns    | kleo   | 192.168.1.2  | DNS (Pi-Hole / Unbound / Traefik)   |
+| mon   | millie | 192.168.1.16 | Monitoring (Zabbix + PostgreSQL)    |
 
 ## Rack Mount
 UCTRONICS Pi Rack Pro for Raspberry Pi 4B, 19" 1U Rack Mount, Support for 4 2.5" SSDs, Secure Shutdown, 0.96" Color Display for Raspberry Pi
-Guide for display configuration on Bullseye OS & Ubuntu OS: https://github.com/UCTRONICS/SKU_RM0004
+Guide for display configuration: https://github.com/UCTRONICS/SKU_RM0004
 
 ## Router
-[RPi Compute Module 4 IoT Router Broad Mini](https://wiki.dfrobot.com/Compute_Module_4_IoT_Router_Board_Mini_SKU_DFR0767)
+[RPi Compute Module 4 IoT Router Board Mini](https://wiki.dfrobot.com/Compute_Module_4_IoT_Router_Board_Mini_SKU_DFR0767)
 
 Note: Requires a custom adapter for the rack mount
 
@@ -19,26 +27,33 @@ Note: Requires a custom adapter for the rack mount
 Check [ns/README](ns/README.md) for more setup info
 
 Overview:
-- [Pi-Hole](https://pi-hole.net/) - add-blocker + cache
+- [Pi-Hole](https://pi-hole.net/) - ad-blocker + cache
   - Handle client DNS requests
   - Delegate requests to the local Unbound installation
 - [Unbound](https://unbound.docs.nlnetlabs.nl/en/latest/) - a secure recursive DNS server
-  - Listen only for queries from the local Pi-Hole installation 
+  - Listen only for queries from the local Pi-Hole installation
   - Listen for both UDP and TCP requests
   - Verify DNSSEC signatures, discarding BOGUS domains
 - [Traefik](https://doc.traefik.io/traefik/getting-started/quick-start/) - reverse proxy
-  - Redirect port 80 to the local Pi-Hole
+  - HTTP→HTTPS redirect for all routed hosts
+  - Hostname-based routing to Pi-Hole, Portainer, and the Traefik dashboard
   - TLS termination
- 
+
 Links:
 - [pi-hole in a docker container](https://github.com/pi-hole/docker-pi-hole)
 - [unbound pi-hole docs](https://docs.pi-hole.net/guides/dns/unbound/)
 - [traefik docker guide](https://www.smarthomebeginner.com/traefik-docker-compose-guide-2022/)
 
 ## VPN
-Pi-VPN
+TODO: Pi-VPN (not yet implemented in this repo)
 
 ## Monitoring
 Check [mon/README](mon/README.md) for more setup info
 
-Zabbix
+Overview:
+- [Zabbix Server](https://www.zabbix.com/) - central monitoring process
+  - Polls data from agents and evaluates triggers
+  - Sends notifications on events
+- [Zabbix Web](https://www.zabbix.com/documentation/current/en/manual/web_interface) - admin UI on Nginx
+- [PostgreSQL](https://www.postgresql.org/) - backing store (ARM64 image)
+- [Zabbix Agent 2](https://www.zabbix.com/documentation/current/en/manual/concepts/agent2) - deployed to monitored hosts via `ansible/bullseye-zabbix-agent2-playbook.yml`
